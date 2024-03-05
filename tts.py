@@ -14,7 +14,7 @@ client = discord.Client(intents=intents)
 
 comandos = ['zentrar','zair','zparar']
 
-roberto = []
+lpessoas = []
 
 @client.event
 async def on_ready():
@@ -25,9 +25,9 @@ async def on_ready():
 
 async def on_message(message):
     global comandos
-    global roberto
+    global lpessoas
     
-    if message.author != client.user:
+    if message.author != client.user and not message.attachments:
             try:
                 chanel = client.get_channel(message.author.voice.channel.id)
                 guild = discord.VoiceClient(client,chanel).guild
@@ -41,12 +41,12 @@ async def on_message(message):
                 if message.content.startswith('zentrar'):
                     await chanel.connect(self_deaf=True)
                     await message.channel.send(f'Entrei em {chanel}')
-                    roberto.append(message.author.name)
-                    print(roberto)
+                    lpessoas.append(message.author.name)
+                    print(lpessoas)
             except:
                 await message.channel.send('Já estou uma call')
 
-            if message.content.startswith('zhelp') or client.user.mentioned_in(message):
+            if message.content.startswith('zhelp') or client.user.mentioned_in(message) and not message.mention_everyone:
                 await message.channel.send('''             
 **Comandos**
 zentrar - Entrar na call que você está conectado
@@ -58,40 +58,40 @@ Apenas quem digitou o comando "zentrar" pode controlar o bot(fazer falar, mandar
                                                                             
 Para falar com o bot só é necessário ter utilizado o comando "zentrar" e então digitar normalmente em um chat
                                      ''')
-            if message.author.name in roberto and message.content.startswith('zair'):
+            if message.author.name in lpessoas and message.content.startswith('zair'):
                 
                 await voice.disconnect(force=True)
                 await message.channel.send('Tá bom já tô indo :C')
 
-                roberto.remove(message.author.name)
-                print(roberto)
+                lpessoas.remove(message.author.name)
+                print(lpessoas)
                 if os.path.exists(arquivo):
                     os.remove(arquivo)
-            elif message.author.name not in roberto and message.content.startswith('zair'):
-                await message.channel.send('Você não pode me controlar agora')
+            elif message.author.name not in lpessoas and message.content.startswith('zair'):
+                await message.channel.send(f'@{message.author.name} Você não tem permissão!')
                 
-            if message.author.name in roberto and message.content.startswith('zparar'):
+            if message.author.name in lpessoas and message.content.startswith('zparar'):
                 voice.stop()
-            elif message.author.name not in roberto and message.content.startswith('zparar'):
-                await message.channel.send('Você não pode me controlar agora')
+            elif message.author.name not in lpessoas and message.content.startswith('zparar'):
+                await message.channel.send(f'@{message.author.name} Você não tem permissão!')
 
-            if message.author.name in roberto and not any(message.content == a for a in comandos):  
+            if message.author.name in lpessoas and not any(message.content == a for a in comandos):  
                 gTTS(text=message.content,lang=idioma,slow=True).save(arquivo)
                 source = discord.FFmpegPCMAudio(source= arquivo)
                 voice.play(source)
 @client.event
 
 async def on_voice_state_update(member, before, after):
-    if before.channel != after.channel and member != client.user:
+    if before.channel != after.channel and member != client.user and before.channel != None:
         channel = before.channel
         voice = discord.VoiceClient(client,channel).guild.voice_client
         server = member.guild
         arquivo = (f'Áudios/{server}.mp3')
         
-        if member.name in roberto or voice in client.voice_clients and len(channel.members) == 1:
+        if member.name in lpessoas or voice in client.voice_clients and len(channel.members) == 1:
             await voice.disconnect(force=True)
-            roberto.remove(member.name)
-            print(roberto)
+            lpessoas.remove(member.name)
+            print(lpessoas)
             if os.path.exists(arquivo):
                 os.remove(arquivo)
     
