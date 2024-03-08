@@ -27,15 +27,14 @@ async def on_message(message):
     global comandos
     global lpessoas
     
-    if message.author != client.user and not message.attachments:
-            try:
+    if message.author != client.user and not message.attachments and message.author.voice != None:
+            if message.author.voice != None:
                 chanel = client.get_channel(message.author.voice.channel.id)
                 guild = discord.VoiceClient(client,chanel).guild
-                
+                    
                 voice = discord.VoiceClient(client,chanel).guild.voice_client
-                arquivo = (f'Áudios/{guild}.mp3')
-            except:
-                print('Erro - linha 32')
+                arquivo = (f'audios/{guild}.mp3')
+
 
             try:
                 if message.content.startswith('zentrar'):
@@ -86,7 +85,7 @@ async def on_voice_state_update(member, before, after):
         channel = before.channel
         voice = discord.VoiceClient(client,channel).guild.voice_client
         server = member.guild
-        arquivo = (f'Áudios/{server}.mp3')
+        arquivo = (f'audios/{server}.mp3')
         
         if member.name in lpessoas or voice in client.voice_clients and len(channel.members) == 1:
             await voice.disconnect(force=True)
