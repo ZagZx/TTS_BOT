@@ -12,7 +12,7 @@ intents = discord.Intents.all()
 
 client = discord.Client(intents=intents)
 
-comandos = ['zentrar','zair','zparar']
+comandos = ['zentrar','zair','zparar', 'zpause']
 
 lpessoas = []
 
@@ -27,23 +27,25 @@ async def on_message(message):
     global comandos
     global lpessoas
     
-    if message.author != client.user and not message.attachments and message.author.voice != None:
-            if message.author.voice != None:
+    if not message.attachments:
+            
+            if message.author.voice == None:
+                await message.channel.send('Você precisa estar em uma call, meu bom.')
+            else:
                 chanel = client.get_channel(message.author.voice.channel.id)
                 guild = discord.VoiceClient(client,chanel).guild
                     
                 voice = discord.VoiceClient(client,chanel).guild.voice_client
                 arquivo = (f'audios/{guild}.mp3')
-
-
-            try:
-                if message.content.startswith('zentrar'):
-                    await chanel.connect(self_deaf=True)
-                    await message.channel.send(f'Entrei em {chanel}')
-                    lpessoas.append(message.author.name)
-                    print(lpessoas)
-            except:
-                await message.channel.send('Já estou uma call')
+            
+                try:
+                    if message.content.startswith('zentrar'):
+                        await chanel.connect(self_deaf=True)
+                        await message.channel.send(f'Entrei em {chanel}')
+                        lpessoas.append(message.author.name)
+                        print(lpessoas)
+                except:
+                    await message.channel.send('Já estou uma call')
 
             if message.content.startswith('zhelp') or client.user.mentioned_in(message) and not message.mention_everyone:
                 await message.channel.send('''             
@@ -81,28 +83,22 @@ Para falar com o bot só é necessário ter utilizado o comando "zentrar" e ent�
 @client.event
 
 async def on_voice_state_update(member, before, after):
-    
-    
-    if member.name in lpessoas and before.channel != None:
+    if member.name in lpessoas:
         channel = before.channel
-        voice = discord.VoiceClient(client,channel).guild.voice_client
-        await voice.disconnect(force=True)
-        await after.channel.connect()
-    elif before.channel != after.channel and member != client.user:
-        channel = before.channel
-        voice = discord.VoiceClient(client,channel).guild.voice_client
-        server = member.guild
-        arquivo = (f'audios/{server}.mp3')
-        
-        if member.name in lpessoas or voice in client.voice_clients and len(channel.members) == 1:
+        voice = discord.VoiceClient(client,channel).guild.voice_client 
+
+        if after.channel != None:
             await voice.disconnect(force=True)
+            await after.channel.connect(self_deaf= True)
+        elif after.channel == None:
+            server = member.guild
+            arquivo = (f'audios/{server}.mp3')
+
+            await voice.disconnect(force=True)
+            
             lpessoas.remove(member.name)
             print(lpessoas)
             if os.path.exists(arquivo):
                 os.remove(arquivo)
-
-        
-            
-        
-            
+   
 client.run(token)
