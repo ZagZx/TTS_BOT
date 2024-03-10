@@ -81,7 +81,14 @@ Para falar com o bot só é necessário ter utilizado o comando "zentrar" e ent�
 @client.event
 
 async def on_voice_state_update(member, before, after):
-    if before.channel != after.channel and member != client.user and before.channel != None:
+    
+    
+    if member.name in lpessoas and before.channel != None:
+        channel = before.channel
+        voice = discord.VoiceClient(client,channel).guild.voice_client
+        await voice.disconnect(force=True)
+        await after.channel.connect()
+    elif before.channel != after.channel and member != client.user:
         channel = before.channel
         voice = discord.VoiceClient(client,channel).guild.voice_client
         server = member.guild
@@ -93,7 +100,7 @@ async def on_voice_state_update(member, before, after):
             print(lpessoas)
             if os.path.exists(arquivo):
                 os.remove(arquivo)
-    
+
         
             
         
