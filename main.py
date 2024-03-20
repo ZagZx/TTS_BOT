@@ -1,5 +1,4 @@
 #METAS: 1° comando para definir um canal para o bot | 
-#       2° fazer o bot só falar as mensagens de quem digitou zentrar
 
 import discord
 from gtts import gTTS
@@ -20,18 +19,22 @@ lpessoas = []
 async def on_ready():
     print(f'Estou online com o nome de {client.user}')
 
-
+@client.event
+async def on_disconnect():
+    global lpessoas
+    if lpessoas:
+        lpessoas = []
+    if client.voice_clients:
+        for a in client.voice_clients:
+            await a.disconnect(force=True)
 @client.event
 
 async def on_message(message):
     global comandos
     global lpessoas
     
-    if not message.attachments:
-            
-            if message.author.voice == None:
-                await message.channel.send('Você precisa estar em uma call, meu bom.')
-            else:
+    if message.author != client.user and not message.attachments and message.author.voice != None:
+            if message.author.voice != None:
                 chanel = client.get_channel(message.author.voice.channel.id)
                 guild = discord.VoiceClient(client,chanel).guild
                     
@@ -45,7 +48,7 @@ async def on_message(message):
                         lpessoas.append(message.author.name)
                         print(lpessoas)
                 except:
-                    await message.channel.send('Já estou uma call')
+                    await message.channel.send('Já estou em uma call')
 
             if message.content.startswith('zhelp') or client.user.mentioned_in(message) and not message.mention_everyone:
                 await message.channel.send('''             
@@ -83,7 +86,8 @@ Para falar com o bot só é necessário ter utilizado o comando "zentrar" e ent�
 @client.event
 
 async def on_voice_state_update(member, before, after):
-    if member.name in lpessoas:
+
+    if before.channel != after.channel and member != client.user and member.name in lpessoas: #aqui
         channel = before.channel
         voice = discord.VoiceClient(client,channel).guild.voice_client 
 
