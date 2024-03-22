@@ -3,7 +3,7 @@
 import discord
 from gtts import gTTS
 import os
-from tok import token
+from toke import token
 
 idioma = 'pt'
 
@@ -22,9 +22,9 @@ async def on_ready():
 @client.event
 async def on_disconnect():
     global lpessoas
-    if lpessoas:
+
+    if lpessoas and client.voice_clients:
         lpessoas = []
-    if client.voice_clients:
         for a in client.voice_clients:
             await a.disconnect(force=True)
 @client.event
