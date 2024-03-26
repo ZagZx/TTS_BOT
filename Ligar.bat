@@ -1,2 +1,2 @@
-start venv\Scripts\python.exe tts.py
+start venv\Scripts\python.exe main.py
 exit
