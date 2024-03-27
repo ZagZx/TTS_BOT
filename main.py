@@ -29,10 +29,9 @@ async def on_disconnect():
             await a.disconnect(force=True)
 @client.event
 
-async def on_message(message):
+async def on_message(message: discord.Message):
     global comandos
     global lpessoas
-
 
     if message.author != client.user and not message.attachments:
             if message.author.voice != None:
@@ -45,11 +44,11 @@ async def on_message(message):
                 try:
                     if message.content.startswith('zentrar'):
                         await chanel.connect(self_deaf=True)
-                        await message.channel.send(f'Entrei em {chanel}')
+                        await message.channel.send(f'Entrei em {chanel.mention}')
                         lpessoas.append(message.author.name)
                         print(lpessoas)
                 except:
-                    await message.channel.send('Já estou em uma call')
+                    await message.channel.send(f'{message.author.mention}Já estou em uma call')
                 if message.author.name in lpessoas and message.content.startswith('zair'):
                 
                     await voice.disconnect(force=True)
@@ -60,12 +59,12 @@ async def on_message(message):
                     if os.path.exists(arquivo):
                         os.remove(arquivo)
                 elif message.author.name not in lpessoas and message.content.startswith('zair'):
-                    await message.channel.send(f'@{message.author.name} Você não tem permissão!')
+                    await message.channel.send(f'{message.author.mention} Você não tem permissão!')
                     
                 if message.author.name in lpessoas and message.content.startswith('zparar'):
                     voice.stop()
                 elif message.author.name not in lpessoas and message.content.startswith('zparar'):
-                    await message.channel.send(f'@{message.author.name} Você não tem permissão!')
+                    await message.channel.send(f'{message.author.mention} Você não tem permissão!')
 
                 if message.author.name in lpessoas and not any(message.content == a for a in comandos):  
                     gTTS(text=message.content,lang=idioma,slow=True).save(arquivo)
