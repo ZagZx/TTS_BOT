@@ -1,6 +1,8 @@
 #METAS: 1° comando para definir um canal para o bot | 
 
 import discord
+from discord import app_commands
+import json
 from gtts import gTTS
 import os
 from toke import token
@@ -10,17 +12,27 @@ idioma = 'pt'
 intents = discord.Intents.all()
 
 client = discord.Client(intents=intents)
+tree = app_commands.CommandTree(client)
 
 comandos = ['zentrar','zair','zparar', 'zpause']
 
 lpessoas = []
 
+
 @client.event
 async def on_ready():
     print(f'Estou online com o nome de {client.user}')
+    await tree.sync()
+@tree.command(
+        name='gremio',
+        description='?'
+)
+async def gremio(interaction: discord.Interaction):
+    await interaction.response.send_message('Vamo pra cima grêmio!',ephemeral=True)
+
 
 @client.event
-async def on_disconnect():
+async def on_connect():
     global lpessoas
 
     if lpessoas and client.voice_clients:
