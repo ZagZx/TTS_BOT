@@ -2,7 +2,6 @@
 
 import discord
 from discord import app_commands
-import json
 from gtts import gTTS
 import os
 from toke import token
@@ -14,7 +13,7 @@ intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
-comandos = ['zentrar','zair','zparar', 'zpause']
+comandos = ['zentrar','zair','zparar']
 
 lpessoas = []
 
@@ -28,7 +27,11 @@ async def on_ready():
         description='?'
 )
 async def gremio(interaction: discord.Interaction):
-    await interaction.response.send_message('Vamo pra cima grêmio!',ephemeral=True)
+    await interaction.response.send_message(f'{interaction.user.mention} Apoiou o grêmio!')
+    if interaction.user.voice != None:
+        chanel = client.get_channel(interaction.user.voice.channel.id)
+        voice = discord.VoiceClient(client,chanel).guild.voice_client
+        voice.play(discord.FFmpegPCMAudio('gremio.mp3'))
 
 
 @client.event
@@ -60,7 +63,7 @@ async def on_message(message: discord.Message):
                         lpessoas.append(message.author.name)
                         print(lpessoas)
                 except:
-                    await message.channel.send(f'{message.author.mention}Já estou em uma call')
+                    await message.channel.send(f'{message.author.mention} Já estou em uma call')
                 if message.author.name in lpessoas and message.content.startswith('zair'):
                 
                     await voice.disconnect(force=True)
