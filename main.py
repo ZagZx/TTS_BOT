@@ -95,14 +95,28 @@ async def config(interaction: discord.Interaction):
 
 @tree.command(
         name='gremio',
-        description='?'
+        description='Apoie o grêmio!'
 )
 
 async def gremio(interaction: discord.Interaction):
+    serverid = str(interaction.guild.id)
+    user = interaction.user.name
+    with open('apoiadores.json', 'r') as filer:
+        apoiadores = json.load(filer)
+    
+
+    if serverid not in apoiadores:
+        apoiadores.update({serverid:[user]})
+
+    if user not in apoiadores[serverid]:
+        apoiadores[serverid].append(user)
+    
+    with open('apoiadores.json', 'w') as filew:
+        json.dump(apoiadores,filew, indent=4)
 
     await interaction.response.send_message(f'{interaction.user.mention} Apoiou o grêmio!')
 
-    if interaction.user.voice != None and interaction.user.voice in client.voice_clients:
+    if interaction.user.voice != None: #and interaction.user.voice in client.voice_clients:
         chanel = client.get_channel(interaction.user.voice.channel.id)
         voice = discord.VoiceClient(client,chanel).guild.voice_client
         voice.play(discord.FFmpegPCMAudio('gremio.mp3'))
@@ -129,6 +143,25 @@ async def canais(interaction:discord.Interaction):
     
     else:
         await interaction.response.send_message('O bot funcionará em todos os canais, caso não seja isso que você quer utilize /config', ephemeral=True)
+
+@tree.command(
+        name='apoiadores',
+        description='Veja quem apoiou o grêmio'
+)
+
+async def apoio(interaction:discord.Interaction):
+
+    serverid = str(interaction.guild.id)
+    with open('apoiadores.json','r') as filer:
+        apoiadores = json.load(filer)
+    
+    apoiadores = str(apoiadores[serverid]).replace('[', '').replace(']','').replace("'", '')
+
+
+
+
+
+    await interaction.response.send_message(f'Esses são os apoiadores do grêmio :sunglasses:\n**{apoiadores}**')
 
 
 @client.event
