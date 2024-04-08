@@ -151,18 +151,19 @@ async def canais(interaction:discord.Interaction):
 
 async def apoio(interaction:discord.Interaction):
 
-    serverid = str(interaction.guild.id)
-    with open('apoiadores.json','r') as filer:
-        apoiadores = json.load(filer)
+    with open('config.json','r') as fileread:
+        dados = json.load(fileread)
     
-    apoiadores = str(apoiadores[serverid]).replace('[', '').replace(']','').replace("'", '')
+    if str(interaction.channel.id) in dados[str(interaction.guild.id)]:
+        serverid = str(interaction.guild.id)
+        with open('apoiadores.json','r') as filer:
+            apoiadores = json.load(filer)
+        
+        apoiadores = str(apoiadores[serverid]).replace('[', '').replace(']','').replace("'", '')
 
-
-
-
-
-    await interaction.response.send_message(f'Esses são os apoiadores do grêmio :sunglasses:\n**{apoiadores}**')
-
+        await interaction.response.send_message(f'Esses são os apoiadores do grêmio :sunglasses:\n**{apoiadores}**')
+    else:
+        await interaction.response.send_message('Utilize esse comando em canais onde o bot tem permissão para mandar mensagens (/canais)',ephemeral=True)
 
 @client.event
 #configuração padrão ao entrar no servidor
