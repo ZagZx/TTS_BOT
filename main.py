@@ -218,60 +218,60 @@ async def on_message(message: discord.Message):
     #print(lcanais)
     #print(message.channel.id)
     #print(message.channel.guild.id)
-    
-    if str(message.channel.id) in lcanais[str(message.channel.guild.id)] or "todos" in lcanais[str(message.channel.guild.id)]: 
-        if message.author != client.user and not message.attachments:
-                if message.author.voice != None:
-                    chanel = client.get_channel(message.author.voice.channel.id)
-                    guild = discord.VoiceClient(client,chanel).guild
-                        
-                    voice = discord.VoiceClient(client,chanel).guild.voice_client
-                    arquivo = (f'audios/{guild}.mp3')
-                
-                    try:
-                        if message.content.startswith('zentrar'): #MUDAR DEPOIS
-                            await chanel.connect(self_deaf=True)
-                            await message.channel.send(f'Entrei em {chanel.mention}')
-                            lpessoas.append(message.author.name)
-                            print(lpessoas)
-                    except:
-                        await message.channel.send(f'{message.author.mention} Já estou em uma call')
-                    if message.author.name in lpessoas and message.content.startswith('zair'): #MUDAR DEPOIS
+    if message.guild != None:
+        if str(message.channel.id) in lcanais[str(message.guild.id)] or "todos" in lcanais[str(message.guild.id)]: 
+            if message.author != client.user and not message.attachments:
+                    if message.author.voice != None:
+                        chanel = client.get_channel(message.author.voice.channel.id)
+                        guild = discord.VoiceClient(client,chanel).guild
+                            
+                        voice = discord.VoiceClient(client,chanel).guild.voice_client
+                        arquivo = (f'audios/{guild}.mp3')
                     
-                        await voice.disconnect(force=True)
-                        await message.channel.send('Tá bom já tô indo :C')
-
-                        lpessoas.remove(message.author.name)
-                        print(lpessoas)
-                        if os.path.exists(arquivo):
-                            os.remove(arquivo)
-                    elif message.author.name not in lpessoas and message.content.startswith('zair'): #MUDAR DEPOIS
-                        await message.channel.send(f'{message.author.mention} Você não tem permissão!')
+                        try:
+                            if message.content.startswith('zentrar'): #MUDAR DEPOIS
+                                await chanel.connect(self_deaf=True)
+                                await message.channel.send(f'Entrei em {chanel.mention}')
+                                lpessoas.append(message.author.name)
+                                print(lpessoas)
+                        except:
+                            await message.channel.send(f'{message.author.mention} Já estou em uma call')
+                        if message.author.name in lpessoas and message.content.startswith('zair'): #MUDAR DEPOIS
                         
-                    if message.author.name in lpessoas and message.content.startswith('zparar'):
-                        voice.stop()
-                    elif message.author.name not in lpessoas and message.content.startswith('zparar'):
-                        await message.channel.send(f'{message.author.mention} Você não tem permissão!')
+                            await voice.disconnect(force=True)
+                            await message.channel.send('Tá bom já tô indo :C')
 
-                    if message.author.name in lpessoas and not any(message.content == a for a in comandos):  
-                        gTTS(text=message.content,lang=idioma,slow=True).save(arquivo)
-                        source = discord.FFmpegPCMAudio(source= arquivo)
-                        voice.play(source)
-                elif message.content in comandos:
-                    await message.channel.send('Você precisa estar conectado em uma call')
+                            lpessoas.remove(message.author.name)
+                            print(lpessoas)
+                            if os.path.exists(arquivo):
+                                os.remove(arquivo)
+                        elif message.author.name not in lpessoas and message.content.startswith('zair'): #MUDAR DEPOIS
+                            await message.channel.send(f'{message.author.mention} Você não tem permissão!')
+                            
+                        if message.author.name in lpessoas and message.content.startswith('zparar'):
+                            voice.stop()
+                        elif message.author.name not in lpessoas and message.content.startswith('zparar'):
+                            await message.channel.send(f'{message.author.mention} Você não tem permissão!')
 
-                if message.content.startswith('zhelp'): #or client.user.mentioned_in(message) and not message.mention_everyone:
-                    await message.channel.send('''             
-    **Comandos**
-    zentrar - Entrar na call que você está conectado
-    zair - Sair da call
-    zparar - parar o áudio tocando                                                                          
+                        if message.author.name in lpessoas and not any(message.content == a for a in comandos):  
+                            gTTS(text=message.content,lang=idioma,slow=True).save(arquivo)
+                            source = discord.FFmpegPCMAudio(source= arquivo)
+                            voice.play(source)
+                    elif message.content in comandos:
+                        await message.channel.send('Você precisa estar conectado em uma call')
 
-    **Informações**
-    Apenas quem digitou o comando "zentrar" pode controlar o bot(fazer falar, mandar sair da call e parar o áudio)  
-                                                                                
-    Para falar com o bot só é necessário ter utilizado o comando "zentrar" e então digitar normalmente em um chat
-                                        ''')
+                    if message.content.startswith('zhelp'): #or client.user.mentioned_in(message) and not message.mention_everyone:
+                        await message.channel.send('''             
+        **Comandos**
+        zentrar - Entrar na call que você está conectado
+        zair - Sair da call
+        zparar - parar o áudio tocando                                                                          
+
+        **Informações**
+        Apenas quem digitou o comando "zentrar" pode controlar o bot(fazer falar, mandar sair da call e parar o áudio)  
+                                                                                    
+        Para falar com o bot só é necessário ter utilizado o comando "zentrar" e então digitar normalmente em um chat
+                                            ''')
             
 @client.event
 
