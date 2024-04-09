@@ -99,28 +99,35 @@ async def config(interaction: discord.Interaction):
 )
 
 async def gremio(interaction: discord.Interaction):
+    with open('config.json', 'r') as filer:
+        canais = json.load(filer)
+    
     serverid = str(interaction.guild.id)
     user = interaction.user.name
-    with open('apoiadores.json', 'r') as filer:
-        apoiadores = json.load(filer)
-    
 
-    if serverid not in apoiadores:
-        apoiadores.update({serverid:[user]})
+    if str(interaction.channel.id) in canais[serverid]:
 
-    if user not in apoiadores[serverid]:
-        apoiadores[serverid].append(user)
-    
-    with open('apoiadores.json', 'w') as filew:
-        json.dump(apoiadores,filew, indent=4)
+        with open('apoiadores.json', 'r') as filer:
+            apoiadores = json.load(filer)
+        
+        
+        if serverid not in apoiadores:
+            apoiadores.update({serverid:[user]})
 
-    await interaction.response.send_message(f'{interaction.user.mention} Apoiou o grêmio!')
+        if user not in apoiadores[serverid]:
+            apoiadores[serverid].append(user)
+        
+        with open('apoiadores.json', 'w') as filew:
+            json.dump(apoiadores,filew, indent=4)
 
-    if interaction.user.voice != None: #and interaction.user.voice in client.voice_clients:
-        chanel = client.get_channel(interaction.user.voice.channel.id)
-        voice = discord.VoiceClient(client,chanel).guild.voice_client
-        voice.play(discord.FFmpegPCMAudio('gremio.mp3'))
+        await interaction.response.send_message(f'{interaction.user.mention} Apoiou o grêmio!')
 
+        if interaction.user.voice != None: #and interaction.user.voice in client.voice_clients:
+            chanel = client.get_channel(interaction.user.voice.channel.id)
+            voice = discord.VoiceClient(client,chanel).guild.voice_client
+            voice.play(discord.FFmpegPCMAudio('gremio.mp3'))
+    else:
+        await interaction.response.send_message('Utilize esse comando em canais onde o bot tem permissão para mandar mensagens (/canais)',ephemeral=True)
 @tree.command(
         name='canais',
         description='Canais onde o bot funciona'
@@ -153,18 +160,19 @@ async def apoio(interaction:discord.Interaction):
 
     with open('config.json','r') as fileread:
         dados = json.load(fileread)
-    
-    if str(interaction.channel.id) in dados[str(interaction.guild.id)]:
-        serverid = str(interaction.guild.id)
-        with open('apoiadores.json','r') as filer:
-            apoiadores = json.load(filer)
-        
-        apoiadores = str(apoiadores[serverid]).replace('[', '').replace(']','').replace("'", '')
+    try:
+        if str(interaction.channel.id) in dados[str(interaction.guild.id)]:
+            serverid = str(interaction.guild.id)
+            with open('apoiadores.json','r') as filer:
+                apoiadores = json.load(filer)
+            
+            apoiadores = str(apoiadores[serverid]).replace('[', '').replace(']','').replace("'", '')
 
-        await interaction.response.send_message(f'Esses são os apoiadores do grêmio :sunglasses:\n**{apoiadores}**')
-    else:
-        await interaction.response.send_message('Utilize esse comando em canais onde o bot tem permissão para mandar mensagens (/canais)',ephemeral=True)
-
+            await interaction.response.send_message(f'Esses são os apoiadores do grêmio :sunglasses:\n**{apoiadores}**')
+        else:
+            await interaction.response.send_message('Utilize esse comando em canais onde o bot tem permissão para mandar mensagens (/canais)',ephemeral=True)
+    except KeyError:
+        await interaction.response.send_message('Ninguém apoiou o grêmio ainda :sob:')
 @client.event
 #configuração padrão ao entrar no servidor
 
