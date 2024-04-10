@@ -23,7 +23,7 @@ intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
-comandos = ['zentrar','zair','zparar']
+comandos = ['zentrar','zair','zparar', 'zhelp']
 
 lpessoas = []
 
