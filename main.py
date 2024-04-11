@@ -16,6 +16,9 @@ import json
 
 from toke import token
 
+if not os.path.exists('./audios'):
+    os.mkdir('audios')
+
 
 
 idioma = 'pt'
