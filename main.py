@@ -1,4 +1,6 @@
-#METAS: 1° comando para definir um canal para o bot | 
+#BUGS PARA ARRUMAR: 
+#1° quando o bot é kickado da call o nome do "dono" não é removido da lista
+#2° quando o bot é movido da call também acontece o mesmo
 
 
 import discord
@@ -121,11 +123,13 @@ async def gremio(interaction: discord.Interaction):
             json.dump(apoiadores,filew, indent=4)
 
         await interaction.response.send_message(f'{interaction.user.mention} Apoiou o grêmio!')
-
-        if interaction.user.voice != None: #and interaction.user.voice in client.voice_clients:
+        
+        if interaction.user.voice != None: #and discord.VoiceClient(client,client.get_channel(interaction.user.voice.channel.id)).guild.voice_client in client.voice_clients: #and interaction.user.voice in client.voice_clients:
+        
             chanel = client.get_channel(interaction.user.voice.channel.id)
             voice = discord.VoiceClient(client,chanel).guild.voice_client
-            voice.play(discord.FFmpegPCMAudio('gremio.mp3'))
+            if voice in client.voice_clients:
+                voice.play(discord.FFmpegPCMAudio('gremio.mp3'))
     else:
         await interaction.response.send_message('Utilize esse comando em canais onde o bot tem permissão para mandar mensagens (/canais)',ephemeral=True)
 @tree.command(
@@ -213,12 +217,15 @@ async def on_message(message: discord.Message):
     global comandos
     global lpessoas
 
+
+    
+
     with open('config.json', 'r') as file:
         lcanais = json.load(file)
     #print(lcanais)
     #print(message.channel.id)
     #print(message.channel.guild.id)
-    if message.guild != None:
+    if message.guild != None and message.channel != None:
         if str(message.channel.id) in lcanais[str(message.guild.id)] or "todos" in lcanais[str(message.guild.id)]: 
             if message.author != client.user and not message.attachments:
                     if message.author.voice != None:
@@ -276,12 +283,13 @@ async def on_message(message: discord.Message):
 @client.event
 
 async def on_voice_state_update(member, before, after):
-
-    if before.channel != after.channel and member != client.user and member.name in lpessoas: #aqui
+    
+    if before.channel != after.channel and member.name in lpessoas: #aqui
         channel = before.channel
         voice = discord.VoiceClient(client,channel).guild.voice_client 
-
+        
         if after.channel != None:
+            
             await voice.disconnect(force=True)
             await after.channel.connect(self_deaf= True)
         elif after.channel == None:
@@ -294,9 +302,18 @@ async def on_voice_state_update(member, before, after):
             print(lpessoas)
             if os.path.exists(arquivo):
                 os.remove(arquivo)
-    #elif before.channel != after.channel and member == client.user:
-     #   for pessoa in before.channel.members.name:
-      #      if pessoa in lpessoas:
-       #         lpessoas.remove(pessoa)
-        #TALVEZ TRAVE O BOT, PRECISA DE FUNÇÃO ASSINCRONA
+    #elif member == client.user and after.channel == None:
+        #channel = before.channel
+        #voice = discord.VoiceClient(client,channel).guild.voice_client
+        
+        #await voice.disconnect(force=True)
+        #for pessoa in before.channel.members:
+            
+            #if pessoa.name in lpessoas:
+            #    lpessoas.remove(pessoa.name)
+            #    print(lpessoas)
+
+    #!!!LEMBRAR DE ARRUMAR!!!
+    #ISSO QUEBRA O MOMENTO EM QUE O BOT SEGUE O MEMBRO PARA A CALL QUE ELE FOR
+    #!!!LEMBRAR DE ARRUMAR!!!
 client.run(token)
