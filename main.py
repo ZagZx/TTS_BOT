@@ -1,8 +1,3 @@
-#BUGS PARA ARRUMAR: 
-#1° quando o bot é kickado da call o nome do "dono" não é removido da lista
-#2° quando o bot é movido da call também acontece o mesmo
-
-
 import discord
 from discord import app_commands
 from discord import ui
@@ -129,7 +124,7 @@ async def gremio(interaction: discord.Interaction):
 
         await interaction.response.send_message(f'{interaction.user.mention} Apoiou o grêmio!')
         
-        if interaction.user.voice != None: #and discord.VoiceClient(client,client.get_channel(interaction.user.voice.channel.id)).guild.voice_client in client.voice_clients: #and interaction.user.voice in client.voice_clients:
+        if interaction.user.voice != None: 
         
             chanel = client.get_channel(interaction.user.voice.channel.id)
             voice = discord.VoiceClient(client,chanel).guild.voice_client
@@ -227,9 +222,7 @@ async def on_message(message: discord.Message):
 
     with open('config.json', 'r') as file:
         lcanais = json.load(file)
-    #print(lcanais)
-    #print(message.channel.id)
-    #print(message.channel.guild.id)
+   
     if message.guild != None and message.channel != None:
         if str(message.channel.id) in lcanais[str(message.guild.id)] or "todos" in lcanais[str(message.guild.id)]: 
             if message.author != client.user and not message.attachments:
@@ -272,7 +265,7 @@ async def on_message(message: discord.Message):
                     elif message.content in comandos:
                         await message.channel.send('Você precisa estar conectado em uma call')
 
-                    if message.content.startswith('zhelp'): #or client.user.mentioned_in(message) and not message.mention_everyone:
+                    if message.content.startswith('zhelp'): 
                         await message.channel.send('''             
         **Comandos**
         zentrar - Entrar na call que você está conectado
@@ -289,14 +282,6 @@ async def on_message(message: discord.Message):
 
 async def on_voice_state_update(member:discord.Member, before, after):
     
-    
-    #print('================================================')
-    #print(before.channel)
-    #print(after.channel)
-    #print('================================================')
-    #for membro in range(0,len(after.channel.members)):
-     #   print(f'Membro {membro+1}:', after.channel.members[membro].name)
-    #print('================================================')
     if before.channel != after.channel: 
         
         if member == client.user:
@@ -343,18 +328,5 @@ async def on_voice_state_update(member:discord.Member, before, after):
                 if os.path.exists(arquivo):
                     os.remove(arquivo)
         
-    #elif member == client.user and after.channel == None:
-        #channel = before.channel
-        #voice = discord.VoiceClient(client,channel).guild.voice_client
-        
-        #await voice.disconnect(force=True)
-        #for pessoa in before.channel.members:
-            
-            #if pessoa.name in lpessoas:
-            #    lpessoas.remove(pessoa.name)
-            #    print(lpessoas)
-
-    #!!!LEMBRAR DE ARRUMAR!!!
-    #ISSO QUEBRA O MOMENTO EM QUE O BOT SEGUE O MEMBRO PARA A CALL QUE ELE FOR
-    #!!!LEMBRAR DE ARRUMAR!!!
+    
 client.run(token)
