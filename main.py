@@ -13,8 +13,10 @@ from discord.utils import MISSING
 from gtts import gTTS
 import os
 import json
+import asyncio
 
 from toke import token
+
 
 if not os.path.exists('./audios'):
     os.mkdir('audios')
@@ -239,14 +241,14 @@ async def on_message(message: discord.Message):
                         arquivo = (f'audios/{guild}.mp3')
                     
                         try:
-                            if message.content.startswith('zentrar'): #MUDAR DEPOIS
-                                await chanel.connect(self_deaf=True)
+                            if message.content.startswith('zentrar'): 
+                                await chanel.connect(self_deaf=True,reconnect=False)
                                 await message.channel.send(f'Entrei em {chanel.mention}')
                                 lpessoas.append(message.author.name)
                                 print(lpessoas)
                         except:
                             await message.channel.send(f'{message.author.mention} Já estou em uma call')
-                        if message.author.name in lpessoas and message.content.startswith('zair'): #MUDAR DEPOIS
+                        if message.author.name in lpessoas and message.content.startswith('zair'): 
                         
                             await voice.disconnect(force=True)
                             await message.channel.send('Tá bom já tô indo :C')
@@ -255,7 +257,7 @@ async def on_message(message: discord.Message):
                             print(lpessoas)
                             if os.path.exists(arquivo):
                                 os.remove(arquivo)
-                        elif message.author.name not in lpessoas and message.content.startswith('zair'): #MUDAR DEPOIS
+                        elif message.author.name not in lpessoas and message.content.startswith('zair'): 
                             await message.channel.send(f'{message.author.mention} Você não tem permissão!')
                             
                         if message.author.name in lpessoas and message.content.startswith('zparar'):
@@ -285,26 +287,62 @@ async def on_message(message: discord.Message):
             
 @client.event
 
-async def on_voice_state_update(member, before, after):
+async def on_voice_state_update(member:discord.Member, before, after):
     
-    if before.channel != after.channel and member.name in lpessoas: #aqui
-        channel = before.channel
-        voice = discord.VoiceClient(client,channel).guild.voice_client 
+    
+    #print('================================================')
+    #print(before.channel)
+    #print(after.channel)
+    #print('================================================')
+    #for membro in range(0,len(after.channel.members)):
+     #   print(f'Membro {membro+1}:', after.channel.members[membro].name)
+    #print('================================================')
+    if before.channel != after.channel: 
         
-        if after.channel != None:
+        if member == client.user:
             
-            await voice.disconnect(force=True)
-            await after.channel.connect(self_deaf= True)
-        elif after.channel == None:
-            server = member.guild
-            arquivo = (f'audios/{server}.mp3')
+            await asyncio.sleep(1)
+            if after.channel == None:
+                if before.channel.members:
+                    for membro in before.channel.members:
+                        
+                        if membro.name in lpessoas:
+                            
+                            lpessoas.remove(membro.name)
+                            print(lpessoas)
+                            
+                            
+                
+            elif before.channel != after.channel and before.channel != None: 
+                await asyncio.sleep(1)
+                for membro in before.channel.members:
+                    
+                    if membro.name in lpessoas:
+                        
+                        lpessoas.remove(membro.name)
+                        print(lpessoas)
 
-            await voice.disconnect(force=True)
+                        await after.channel.guild.voice_client.disconnect(force=True)
+
+        elif member.name in lpessoas: #aqui
+            channel = before.channel
+            voice = discord.VoiceClient(client,channel).guild.voice_client 
             
-            lpessoas.remove(member.name)
-            print(lpessoas)
-            if os.path.exists(arquivo):
-                os.remove(arquivo)
+            if after.channel != None:
+                
+                await voice.disconnect(force=True)
+                await after.channel.connect(self_deaf= True)
+            elif after.channel == None:
+                server = member.guild
+                arquivo = (f'audios/{server}.mp3')
+
+                await voice.disconnect(force=True)
+                
+                lpessoas.remove(member.name)
+                print(lpessoas)
+                if os.path.exists(arquivo):
+                    os.remove(arquivo)
+        
     #elif member == client.user and after.channel == None:
         #channel = before.channel
         #voice = discord.VoiceClient(client,channel).guild.voice_client
