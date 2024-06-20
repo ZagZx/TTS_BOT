@@ -232,7 +232,9 @@ async def on_message(message: discord.Message):
                             
                         voice = discord.VoiceClient(client,chanel).guild.voice_client
                         arquivo = (f'audios/{guild}.mp3')
-                    
+                        
+                        message.content = message.content.lower()
+                         
                         try:
                             if message.content.startswith('zentrar'): 
                                 await chanel.connect(self_deaf=True,reconnect=False)
