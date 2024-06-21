@@ -12,11 +12,8 @@ import asyncio
 
 from toke import token
 
-
 if not os.path.exists('./audios'):
     os.mkdir('audios')
-
-
 
 idioma = 'pt'
 
@@ -107,7 +104,7 @@ async def gremio(interaction: discord.Interaction):
     serverid = str(interaction.guild.id)
     user = interaction.user.name
 
-    if str(interaction.channel.id) in canais[serverid]:
+    if str(interaction.channel.id) in canais[serverid] or "todos" in canais[serverid]:
 
         with open('apoiadores.json', 'r') as filer:
             apoiadores = json.load(filer)
@@ -165,7 +162,7 @@ async def apoio(interaction:discord.Interaction):
     with open('config.json','r') as fileread:
         dados = json.load(fileread)
     try:
-        if str(interaction.channel.id) in dados[str(interaction.guild.id)]:
+        if str(interaction.channel.id) in dados[str(interaction.guild.id)] or "todos" in dados[str(interaction.guild.id)]:
             serverid = str(interaction.guild.id)
             with open('apoiadores.json','r') as filer:
                 apoiadores = json.load(filer)

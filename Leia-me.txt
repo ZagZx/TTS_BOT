@@ -1,3 +1,0 @@
-1 - LEMBRAR DE BAIXAR O FFMPEG E COLOCAR NA PASTA DO BOT, É NECESSÁRIO APENAS O ARQUIVO "ffmpeg.exe"
-
-2 - CRIAR O ARQUIVO "toke.py" com variável token (token = 'SEU TOKEN AQUI')
