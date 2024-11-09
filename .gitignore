@@ -1,3 +1,7 @@
 /venv
 /__pycache__
-*toke.py
+toke.py
+.directory
+/audios
+config.json
+apoiadores.json

@@ -10,16 +10,28 @@ import os
 import json
 import asyncio
 
+from toke import token
+
+if not os.path.exists("apoiadores.json"):
+    with open('apoiadores.json', 'w') as fileRead:
+        fileRead.write(
+"""{
+
+}""")
+
+if not os.path.exists("config.json"):
+    with open('config.json', 'w') as fileRead:
+        fileRead.write(
+"""{
+
+}""")
+
 
 if not os.path.exists('toke.py'):
     os.mknod('toke.py')
     with open('toke.py', 'w') as tokef:
         tokef.write('token = "seu token aqui, não retire as aspas"')
         
-
-from toke import token
-
-
 if not os.path.exists('./audios'):
     os.mkdir('audios')
 
@@ -33,6 +45,10 @@ tree = app_commands.CommandTree(client)
 comandos = ['zentrar','zair','zparar', 'zhelp']
 
 lpessoas = []
+
+
+
+
 
 class Config(ui.View):
     def __init__(self):
@@ -84,6 +100,18 @@ class Config(ui.View):
 
 async def on_ready():
     print(f'Estou online com o nome de {client.user}')
+
+    with open('config.json', 'r') as fileread:
+        dados = json.load(fileread)
+
+    #caso perca o json com as configurações, 
+    #isso configura todos os servidores em que o bot está para aceitar todos os canais
+    for server in client.guilds: 
+        if server.id not in dados:
+            dados.update({server.id:"todos"})
+            with open('config.json','w') as fileWrite:
+                json.dump(dados,fileWrite, indent=4)
+
     await tree.sync()
 
 @tree.command(
