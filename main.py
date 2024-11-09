@@ -103,11 +103,10 @@ async def on_ready():
 
     with open('config.json', 'r') as fileread:
         dados = json.load(fileread)
-
     #caso perca o json com as configurações, 
     #isso configura todos os servidores em que o bot está para aceitar todos os canais
     for server in client.guilds: 
-        if server.id not in dados:
+        if str(server.id) not in dados.keys():
             dados.update({server.id:"todos"})
             with open('config.json','w') as fileWrite:
                 json.dump(dados,fileWrite, indent=4)
