@@ -10,13 +10,14 @@ esqueci de pagar a host, o bot está offline 😭😭😭
   
   Para instalar as dependências, instale os requirements.txt usando o comando "pip install -r requirements.txt" no terminal.
   
-  Caso não funcione:
+  **Caso não funcione:**
 
     - 1° Abra o terminal, vá até a pasta do bot utilizando "cd \caminho_para_a_pasta_do_bot"
   
     - 2° Digite "python -m venv venv"
   
-    - 3° Digite "venv\Scripts\activate obs:isso só funciona no CMD, para o PowerShell é necessário configurar para permitir a execução de scripts, então use o CMD mesmo"
+    - 3° Digite "venv\Scripts\activate" | OBS: isso só funciona no CMD
+    
     - 4° Agora é só instalar as dependências como visto anteriormente "pip install -r requirements.txt"
     
 - ### Para o bot funcionar
