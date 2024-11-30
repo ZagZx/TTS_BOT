@@ -10,6 +10,10 @@ import os
 import json
 import asyncio
 
+if not os.path.exists('toke.py'):
+    with open('toke.py', 'w', encoding="UTF-8") as tokef:
+        tokef.write('token = "seu token aqui, não retire as aspas"')
+        
 from toke import token
 
 if not os.path.exists("apoiadores.json"):
@@ -27,10 +31,7 @@ if not os.path.exists("config.json"):
 }""")
 
 
-if not os.path.exists('toke.py'):
-    os.mknod('toke.py')
-    with open('toke.py', 'w') as tokef:
-        tokef.write('token = "seu token aqui, não retire as aspas"')
+
         
 if not os.path.exists('./audios'):
     os.mkdir('audios')
