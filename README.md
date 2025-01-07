@@ -6,7 +6,7 @@ esqueci de pagar a host, o bot está offline 😭😭😭
 
 - ### Instalando dependências
   
-  É necessário ter python instalado no seu pc.
+  É necessário ter python instalado no seu pc. OBS: apenas versões abaixo da 3.13
   
   Para instalar as dependências, instale os requirements.txt usando o comando "pip install -r requirements.txt" no terminal.
   
