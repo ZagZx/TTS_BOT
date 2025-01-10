@@ -1,8 +1,9 @@
 /venv
-/__pycache__
-toke.py
-.directory
 /audios
-config.json
-apoiadores.json
+/dados
+toke.py
+
+__pycache__
+.directory
 ffmpeg.exe
+main

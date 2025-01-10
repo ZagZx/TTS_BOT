@@ -1,0 +1,13 @@
+{
+    'id do servidor':
+    {
+        canais:'todos',
+        idioma:'pt_BR',
+        usuarios:
+        {
+            id do usuario:idioma,
+            id do usuario:idioma,
+            id do usuario:idioma
+        }
+    }
+}

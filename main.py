@@ -2,8 +2,8 @@ import discord
 from discord import app_commands
 from discord import ui
 
-from typing import Coroutine
-from discord.utils import MISSING
+# from typing import Coroutine
+# from discord.utils import MISSING
 
 from gtts import gTTS
 import os
@@ -30,11 +30,9 @@ if not os.path.exists("config.json"):
 
 }""")
 
-
-
-        
 if not os.path.exists('./audios'):
     os.mkdir('audios')
+
 
 idioma = 'pt'
 
@@ -46,9 +44,6 @@ tree = app_commands.CommandTree(client)
 comandos = ['zentrar','zair','zparar', 'zhelp']
 
 lpessoas = []
-
-
-
 
 
 class Config(ui.View):
@@ -247,11 +242,8 @@ async def on_connect():
 @client.event
 
 async def on_message(message: discord.Message):
-    global comandos
-    global lpessoas
-
-
-    
+    # global comandos
+    # global lpessoas
 
     with open('config.json', 'r') as file:
         lcanais = json.load(file)
