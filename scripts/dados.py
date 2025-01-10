@@ -5,8 +5,8 @@ import discord
 import os
 import json
 
-pathConfig = './dados/config.json'
-pathApoio = './dados/apoiadores.json'
+PATH_CONFIG = './dados/config.json'
+PATH_APOIO = './dados/apoiadores.json'
 
 def FirstRun():
     '''Checa se arquivos necessários para o funcionamento do bot existem e os cria'''
@@ -21,12 +21,12 @@ def FirstRun():
     if not os.path.exists('./dados'):
         os.mkdir('./dados')    
 
-    if not os.path.exists(pathApoio):
-        with open(pathApoio, 'w') as file:
+    if not os.path.exists(PATH_APOIO):
+        with open(PATH_APOIO, 'w') as file:
             file.write('{\n}')
     
-    if not os.path.exists(pathConfig):
-        with open(pathConfig, 'w') as file:
+    if not os.path.exists(PATH_CONFIG):
+        with open(PATH_CONFIG, 'w') as file:
             file.write('{\n}')
 
 
@@ -40,11 +40,11 @@ def DefaultConfigs(client: discord.Client):
 
     '''
 
-    with open('config.json', 'r') as fileread:
+    with open(PATH_CONFIG, 'r') as fileread:
             dados = json.load(fileread)
 
     for server in client.guilds: 
         if str(server.id) not in dados.keys():
             dados.update({server.id:"todos"})
-            with open('config.json','w') as fileWrite:
+            with open(PATH_CONFIG,'w') as fileWrite:
                 json.dump(dados,fileWrite, indent=4)
