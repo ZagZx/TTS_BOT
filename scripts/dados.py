@@ -41,10 +41,16 @@ def DefaultConfigs(client: discord.Client):
     '''
 
     with open(PATH_CONFIG, 'r') as fileread:
-            dados = json.load(fileread)
-
+        dados = json.load(fileread)
+    dados:dict
+    
     for server in client.guilds: 
         if str(server.id) not in dados.keys():
-            dados.update({server.id:"todos"})
+            default = {server.id:{
+                "canais":"todos",
+                "idioma":"pt",
+                "usuarios":[]}
+                }
+            dados.update(default)
             with open(PATH_CONFIG,'w') as fileWrite:
                 json.dump(dados,fileWrite, indent=4)

@@ -36,7 +36,13 @@ if not os.path.exists('./audios'):
 
 idioma = 'pt'
 
-intents = discord.Intents.all()
+intents = discord.Intents.none()
+
+intents.voice_states = True
+intents.guild_messages = True
+intents.guilds = True
+intents.message_content = True
+
 
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
@@ -110,8 +116,8 @@ async def on_ready():
     await tree.sync()
 
 @tree.command(
-        name='config', 
-        description='Selecionar o canal que o bot irá funcionar'
+    name='config', 
+    description='Selecionar o canal que o bot irá funcionar'
 )
 
 async def config(interaction: discord.Interaction):
