@@ -34,7 +34,7 @@ def DefaultConfigs(client: discord.Client):
     '''Checa se todos os servidores que o bot está, tem uma configuração no banco de dados, se algum
     não tiver, então coloca as configurações padrão.
     
-    - Configurações padrão: 
+    Configurações padrão: 
         - chats de mensagem: todos 
         - idioma da voz: pt_br
 
@@ -54,3 +54,20 @@ def DefaultConfigs(client: discord.Client):
             dados.update(default)
             with open(PATH_CONFIG,'w') as fileWrite:
                 json.dump(dados,fileWrite, indent=4)
+
+def UpdateChannels(guildID:int, channels: str | list[str] = "todos"):
+    '''
+    Atualiza os valores dos canais na configuração do servidor
+
+    Parâmetros:
+        - guildID: ID do servidor
+        - channels: canais em que o bot funcionará, valor padrão é "todos", mas pode ser uma lista de string com o id dos canais
+    '''
+
+    with open(PATH_CONFIG) as fileRead:
+        jsonFile:dict = json.load(fileRead)
+
+    jsonFile[str(guildID)]["canais"] = channels
+
+    with open(PATH_CONFIG, 'w') as fileWrite:
+        json.dump(jsonFile,fileWrite, indent=4)
