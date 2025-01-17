@@ -1,13 +1,26 @@
 '''Módulo com as funções utilizadas para armazenar e manipular os dados'''
 
 import discord
+from gTTS import gtts
 
 import os
 import json
 
 PATH_CONFIG = './dados/config.json'
 PATH_APOIO = './dados/apoiadores.json'
+PATH_LANGS = './dados/languages.json'
 
+def UpdateLanguages():
+    '''Coloca o dicionário com os idiomas no languages.json'''
+
+    with open(PATH_LANGS, 'r') as fileRead:
+        langsJson = json.load(fileRead)
+
+    langsJson.update(gtts.lang.tts_langs())
+
+    with open(PATH_LANGS, 'w') as fileWrite:
+        json.dump(langsJson, fileWrite)
+    
 def FirstRun():
     '''Checa se arquivos necessários para o funcionamento do bot existem e os cria'''
 
@@ -20,6 +33,7 @@ def FirstRun():
 
     if not os.path.exists('./dados'):
         os.mkdir('./dados')    
+    if not os.path.exists(PATH_LANGS):
 
     if not os.path.exists(PATH_APOIO):
         with open(PATH_APOIO, 'w') as file:
@@ -71,3 +85,8 @@ def UpdateChannels(guildID:int, channels: str | list[str] = "todos"):
 
     with open(PATH_CONFIG, 'w') as fileWrite:
         json.dump(jsonFile,fileWrite, indent=4)
+
+
+def GetLanguages():
+    '''Pega todas as línguas do languages.json'''
+    

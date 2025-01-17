@@ -10,7 +10,6 @@ def GetOptionsByGuild(guild: discord.Guild) -> list[discord.SelectOption]:
         options.append(option)
     
     return options
-        
 
 class Config(ui.View):
     
