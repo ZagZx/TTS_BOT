@@ -1,7 +1,7 @@
 import discord
 from discord import ui
 
-from scripts.dados import UpdateChannels
+from scripts.dados import UpdateChannels, GetLanguages
 
 def GetOptionsByGuild(guild: discord.Guild) -> list[discord.SelectOption]:
     options = []
@@ -11,16 +11,28 @@ def GetOptionsByGuild(guild: discord.Guild) -> list[discord.SelectOption]:
     
     return options
 
+def GetLangsOptions():
+    languages = GetLanguages()
+
+    matrizOptions = []
+    tempOptions = []
+    for key in languages.keys():
+        if len(tempOptions) < 25:
+            tempOptions.append(discord.SelectOption(label=languages[key], value=key))
+        else:
+            matrizOptions.append(tempOptions)
+            tempOptions = []
+
 class Config(ui.View):
     
     def __init__(self, client: discord.Client, guild:discord.Guild):
         super().__init__()
         self.guild = guild
 
-        self.StartSelect()
+        self.StartSelectChannels()
         self.StartButton()
 
-    def StartSelect(self):
+    def StartSelectChannels(self):
         options = GetOptionsByGuild(self.guild)
 
         select = ui.Select(options= options, max_values=len(options))
@@ -40,6 +52,9 @@ class Config(ui.View):
 
         self.add_item(select)
 
+    def StartSelectLangs(self):
+        pass
+    
     def StartButton(self):
         
         button = ui.Button(label='Todos os chats',style=discord.ButtonStyle.blurple)

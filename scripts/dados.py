@@ -46,7 +46,6 @@ def FirstRun():
         with open(PATH_CONFIG, 'w') as file:
             file.write('{\n}')
 
-
 def DefaultConfigs(client: discord.Client):
     '''Checa se todos os servidores que o bot está, tem uma configuração no banco de dados, se algum
     não tiver, então coloca as configurações padrão.
@@ -88,3 +87,7 @@ def UpdateChannels(guildID:int, channels: str | list[str] = "todos"):
 
     with open(PATH_CONFIG, 'w') as fileWrite:
         json.dump(jsonFile,fileWrite, indent=4)
+
+def GetLanguages() -> dict:
+    with open(PATH_LANGS) as file:
+        return json.load(file)

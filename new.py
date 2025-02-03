@@ -77,5 +77,4 @@ async def SlashCanais(interaction:discord.Interaction):
             await interaction.response.send_message(f'O bot funcionará nos seguintes canais:'+string, ephemeral=True)
 #endregion
 
-
 client.run(token)
